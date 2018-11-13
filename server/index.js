@@ -1,5 +1,6 @@
 
 const Koa = require('koa');
+const bodyparser = require('koa-bodyparser');
 const CatLoggr = require('cat-loggr');
 
 const loggr = new CatLoggr({
@@ -38,6 +39,13 @@ async function start() {
     const builder = new Builder(nuxt);
     await builder.build();
   }
+
+  app.use(bodyparser());
+
+  app.use(async (ctx, next) => {
+    console.log(ctx.method, ctx.path);
+    await next();
+  });
 
   new ApiRoute(client, app);
 

@@ -3,7 +3,9 @@
     <section class='container'>
       <header class='center'>
         <h1 class='title'>
-          Club BAIST
+          <nuxt-link to='/'>
+            Club BAIST
+          </nuxt-link>
         </h1>
       </header>
     </section>

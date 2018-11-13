@@ -75,7 +75,7 @@ module.exports = {
         validate: {
           is: /^\d{3}-\d{3}-\d{4}$/
         },
-        allowNull: false
+        allowNull: true
       },
       Email: {
         type: Sequelize.STRING(50),
@@ -159,7 +159,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('TeeTimes');
-    await queryInterface.dropTable('Memebrs');
+    await queryInterface.dropTable('Members');
     await queryInterface.dropTable('Companies');
   }
 };
