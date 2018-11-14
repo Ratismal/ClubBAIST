@@ -52,6 +52,10 @@ module.exports = {
     debug: process.env.NODE_ENV !== 'production'
   },
 
+  proxy: {
+    '/api/': process.env.API_ORIGIN || 'https://club-baist.stupidcat.me/'
+  },
+
   /*
   ** Build configuration
   */
