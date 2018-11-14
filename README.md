@@ -1,6 +1,6 @@
-# ClubBAIST
+# Club BAIST
 
-> club baist :(
+> a project for school. nothing more, nothing less
 
 ## Build Setup
 
