@@ -3,7 +3,7 @@ export function state() {
     user: null,
     // hardcode to an id of 1 for now,
     // auth is out of scope
-    id: 1
+    id: 0
   };
 };
 

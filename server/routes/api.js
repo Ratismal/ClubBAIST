@@ -19,7 +19,7 @@ module.exports = class ApiRoute {
 
     this.router.get('/teetimes', this.getTeeTimes.bind(this));
     this.router.put('/teetimes', this.putTeeTimes.bind(this));
-    this.router.delete('/teetimes', this.deleteTeeTimes.bind(this));
+    this.router.delete('/teetimes/:id', this.deleteTeeTimes.bind(this));
 
     this.router.get('/members/:id', this.getMember.bind(this));
     this.router.get('/members/:id/teetimes', this.getMemberTeetimes.bind(this));
@@ -44,7 +44,11 @@ module.exports = class ApiRoute {
   }
 
   async deleteTeeTimes(ctx, next) {
-
+    let res = await this.client.manager.cancelTeeTime(ctx.state.id);
+    ctx.assert(res,
+      400, 'Invalid request');
+    ctx.status = 200;
+    ctx.body = { message: 'OK' };
   }
 
   async getMember(ctx, next) {
@@ -55,8 +59,8 @@ module.exports = class ApiRoute {
   }
 
   async getMemberTeetimes(ctx, next) {
-
+    let teetimes = await this.client.manager.listMemberTeeTimes(ctx.state.id);
+    ctx.status = 200;
+    ctx.body = teetimes.map(tt => tt.dataValues);
   }
-
-
 };

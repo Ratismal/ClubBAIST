@@ -8,8 +8,9 @@ module.exports = class TeeTimes {
   async addTeeTime(MemberID, PlayerCount, CartCount, date) {
     console.log('Adding Tee Time');
     try {
+      console.log(date);
       await this.db.TeeTime.create({
-        MemberID, PlayerCount, CartCount, Date
+        MemberID, PlayerCount, CartCount, Date: date
       });
 
       return true;
@@ -17,5 +18,25 @@ module.exports = class TeeTimes {
       console.error(err);
       return false;
     }
+  }
+
+  async deleteTeeTime(teeTimeId) {
+    try {
+      let teetime = await this.db.TeeTime.findByPk(teeTimeId);
+      await teetime.destroy();
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }
+
+  async getMemberTeeTimes(memberId) {
+    let teetimes = await this.db.TeeTime.findAll({
+      where: {
+        MemberID: memberId
+      }
+    });
+    return teetimes;
   }
 };

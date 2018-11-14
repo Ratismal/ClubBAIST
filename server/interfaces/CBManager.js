@@ -17,4 +17,12 @@ module.exports = class CBManager {
     console.log('Reserving Tee Time');
     return await this.TeeTimes.addTeeTime(MemberID, PlayerCount, CartCount, date);
   }
+
+  async listMemberTeeTimes(memberId) {
+    return await this.TeeTimes.getMemberTeeTimes(memberId);
+  }
+
+  async cancelTeeTime(teeTimeID) {
+    return await this.TeeTimes.deleteTeeTime(teeTimeID);
+  }
 };

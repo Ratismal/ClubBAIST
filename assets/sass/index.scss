@@ -36,6 +36,19 @@ h1 {
   background: none;
   margin: 0;
 
+  &.danger {
+    border-color: $dbuttonColor;
+    color: $dbuttonColor;
+    &:hover {
+      border-color: $dbuttonColorHover;
+      color: $dbuttonColorHover;
+    }
+  }
+
+  &.full {
+    width: 100%;
+  }
+
   &:hover {
     border-color: $buttonColorHover;
     color: $buttonColorHover;
