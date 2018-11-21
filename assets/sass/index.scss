@@ -67,6 +67,14 @@ h1 {
       margin-right: 10px;
     }
   }
+
+  .margin {
+    margin: 5px 0;
+
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
 }
 
 header {
@@ -82,4 +90,8 @@ header {
 h1 a {
   color: $text;
   text-decoration: none;
+}
+
+.error {
+  white-space: pre-wrap;
 }

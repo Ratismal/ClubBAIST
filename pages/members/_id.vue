@@ -9,7 +9,7 @@
       <p>Phone1: {{ member.Phone1 }}</p>
       <p>Phone2: {{ member.Phone2 }}</p>
       <p>Email: {{ member.Email }}</p>
-      <p>Date of Birth: {{ member.DateOfBirth }}</p>
+      <p>Date of Birth: {{ getDate(member.DateOfBirth) }}</p>
       <p>Occupation: {{ member.Occupation }}</p>
       <p>Tier: {{ member.Tier }}</p>
     </section>
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   async asyncData({ params, $axios }) {
     try {
@@ -29,6 +31,11 @@ export default {
       return { member: user };
     } catch (err) {
       return { member: null };
+    }
+  },
+  methods: {
+    getDate(date) {
+      return moment(date).format('LLLL');
     }
   }
 };

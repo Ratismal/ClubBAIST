@@ -2,34 +2,67 @@
   <div>
     <section class='container'>
       <h2>New TeeTime</h2>
-
+      <label>Player Count</label>
       <input v-model='teetime.PlayerCount' type='number' placeholder='Player Count'>
+      <label>Cart Count</label>
       <input v-model='teetime.CartCount' type='number' placeholder='Cart Count'>
-      <input v-model='teetime.Date' type='datetime-local' placeholder='Date'>
-
+      <label>Date</label>
+      <input v-model='teetime.Date' type='date' placeholder='Date'>
+      <label>Time</label>
+      <div class='button-group'>
+        <input v-model='Hours' type='number' placeholder='Hour' class='margin' min='0' max='12'>
+        <span class='time-separator'>:</span>
+        <input v-model='Minutes' type='number' placeholder='Minute' class='margin' min='0' max='59'>
+        <select v-model='AM'>
+          <option value='true' selected>AM</option>
+          <option value='false'>PM</option>
+        </select>
+      </div>
+      {{ formattedDate }}
       <div class='button-group'>
         <button class='button' @click.prevent='submit'>
           Submit
         </button>
       </div>
 
-      <p>{{ error }}</p>
+      <p class='error'>{{ error }}</p>
     </section>
   </div>
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   data: () => ({
     teetime: {
       MemberID: 0,
       PlayerCount: undefined,
       CartCount: undefined,
-      Date: ''
+      Date: moment().format('YYYY-MM-DD')
     },
+    Hours: null,
+    Minutes: null,
+    AM: 'true',
     validatedTeetime: null,
     error: ''
   }),
+  computed: {
+    date() {
+      console.log(this.teetime.Date);
+      let d = moment(this.teetime.Date);
+
+      d = d
+        .add(this.Hours, 'h')
+        .add(this.Minutes, 'm')
+        .add(this.AM === 'true' ? 0 : 12, 'h');
+
+      return d;
+    },
+    formattedDate() {
+      return this.date.format('LLLL');
+    }
+  },
   async asyncData({ params, $axios }) {},
   methods: {
     validate(teetime) {
@@ -47,7 +80,7 @@ export default {
       if (teetime.CartCount > 4)
         return (this.error = 'CartCount is greater than 4.');
 
-      if (teetime.Date.toString() === 'Invalid Date')
+      if (!teetime.Date.isValid())
         return (this.error = 'A valid date must be provided.');
       if (teetime.Date <= Date.now())
         return (this.error = 'The date must be later than today.');
@@ -61,18 +94,28 @@ export default {
         MemberID: this.$store.state.auth.id,
         PlayerCount: Number(this.teetime.PlayerCount),
         CartCount: Number(this.teetime.CartCount),
-        Date: new Date(this.teetime.Date)
+        Date: this.date
       };
       if (this.validate(teetime) === true) {
         try {
           await this.$axios.$put('/teetimes', teetime);
           this.$router.push('/');
         } catch (err) {
-          this.error = err.message;
-          console.log(err.data);
+          this.error = err.message + '\n\n' + err.response.data;
+          console.log(err.response);
         }
       }
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.time-separator {
+  margin-right: 10px;
+  font-size: 1.3em;
+}
+.button-group {
+  align-items: center;
+}
+</style>

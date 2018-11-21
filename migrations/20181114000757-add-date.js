@@ -5,12 +5,14 @@ module.exports = {
     await queryInterface.addColumn('TeeTimes', 'Date', {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      unique: true
     });
 
     await queryInterface.changeColumn('TeeTimes', 'Date', {
       type: Sequelize.DATE,
-      allowNull: false
+      allowNull: false,
+      unique: true
     });
   },
 

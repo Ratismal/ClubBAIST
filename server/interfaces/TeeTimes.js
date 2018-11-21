@@ -16,7 +16,10 @@ module.exports = class TeeTimes {
       return true;
     } catch (err) {
       console.error(err);
-      return false;
+      return {
+        error: true,
+        err
+      };
     }
   }
 
@@ -27,7 +30,10 @@ module.exports = class TeeTimes {
       return true;
     } catch (err) {
       console.error(err);
-      return false;
+      return {
+        error: true,
+        err
+      };
     }
   }
 

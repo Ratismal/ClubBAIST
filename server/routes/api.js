@@ -37,8 +37,8 @@ module.exports = class ApiRoute {
     let body = ctx.request.body;
     console.log(ctx.request.body);
     let res = await this.client.manager.reserveTeeTime(body.MemberID, body.PlayerCount, body.CartCount, body.Date);
-    ctx.assert(res,
-      400, 'Invalid request');
+    ctx.assert(!res.error,
+      400, `Validation Error(s): ${res.err.errors.map(e => e.message).join(', ')}`);
     ctx.status = 200;
     ctx.body = { message: 'OK' };
   }

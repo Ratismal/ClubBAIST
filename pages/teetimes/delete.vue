@@ -9,7 +9,7 @@
           <h3>TeeTime #{{ teetime.TeeTimeID }}</h3>
           <div>Players: {{ teetime.PlayerCount }}</div>
           <div>Carts: {{ teetime.CartCount }}</div>
-          <div>Date: {{ teetime.Date }}</div>
+          <div>Date: {{ getDate(teetime.Date) }}</div>
           <br>
           <button class='button danger full' @click.prevent='deleteTeetime(teetime.TeeTimeID)'>Delete</button>
         </div>
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   async asyncData({ params, $axios, store }) {
     try {
@@ -41,6 +43,9 @@ export default {
       } catch (err) {
         this.error = err.message;
       }
+    },
+    getDate(date) {
+      return moment(date).format('LLLL');
     }
   }
 };
