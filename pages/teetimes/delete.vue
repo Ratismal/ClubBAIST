@@ -6,10 +6,10 @@
 
       <div class='teetime-wrapper'>
         <div v-for='teetime in teetimes' :key='teetime.TeeTimeID' class='teetime'>
-          <h3>TeeTime #{{ teetime.TeeTimeID }}</h3>
+          <h3>{{ getDate(teetime.Date) }}</h3>
+          <div>ID: {{ teetime.TeeTimeID }}</div>
           <div>Players: {{ teetime.PlayerCount }}</div>
           <div>Carts: {{ teetime.CartCount }}</div>
-          <div>Date: {{ getDate(teetime.Date) }}</div>
           <br>
           <button class='button danger full' @click.prevent='deleteTeetime(teetime.TeeTimeID)'>Delete</button>
         </div>
@@ -29,6 +29,10 @@ export default {
       let teetimes = await $axios.$get(
         `/members/${store.state.auth.id}/teetimes`
       );
+      console.log(teetimes);
+      teetimes.sort((a, b) => {
+        return moment(a.Date) - moment(b.Date);
+      });
       return { teetimes: teetimes, error: null };
     } catch (err) {
       console.log(err.data);
