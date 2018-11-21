@@ -13,9 +13,9 @@ module.exports = class CBManager {
     return await this.Members.getMember(id);
   }
 
-  async reserveTeeTime(MemberID, PlayerCount, CartCount, date) {
+  async reserveTeeTime(...args) {
     console.log('Reserving Tee Time');
-    return await this.TeeTimes.addTeeTime(MemberID, PlayerCount, CartCount, date);
+    return await this.TeeTimes.addTeeTime(...args);
   }
 
   async listMemberTeeTimes(memberId) {

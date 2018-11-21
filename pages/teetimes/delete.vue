@@ -9,9 +9,11 @@
           <h3 class='center'>{{ getDate(teetime.Date) }}</h3>
           <div class='button-group'>
             <!-- <div>ID: {{ teetime.TeeTimeID }}</div> -->
-            <div class='item'>Players: {{ teetime.PlayerCount }}</div>
             <div class='item'>Carts: {{ teetime.CartCount }}</div>
             <button class='button danger' @click.prevent='deleteTeetime(teetime.TeeTimeID)'>Delete</button>
+          </div>
+          <div class='button-group'>
+            <span v-for='player in getPlayers(teetime)' :key='player' class='item'>{{ player }}</span>
           </div>
           <br>
         </div>
@@ -52,6 +54,11 @@ export default {
     },
     getDate(date) {
       return moment(date).format('LLLL');
+    },
+    getPlayers(teetime) {
+      return [teetime.P1, teetime.P2, teetime.P3, teetime.P4]
+        .filter(p => p)
+        .map(p => p.FirstName + ' ' + p.LastName);
     }
   }
 };
@@ -71,9 +78,12 @@ export default {
 
 .button-group {
   align-items: baseline;
+  justify-content: space-around;
+  margin-bottom: 5px;
 
   .item {
-    flex: 1;
+    flex: 1 0;
+    text-align: center;
   }
 }
 </style>

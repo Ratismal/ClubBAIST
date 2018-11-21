@@ -9,6 +9,7 @@
         <nuxt-link class='button' to='/teetimes/delete'>Cancel TeeTime</nuxt-link>
       </div>
       <div class='button-group'>
+        <nuxt-link to='/teetimes/standing/' class='button'>Standing TeeTimes</nuxt-link>
         <nuxt-link :to='"/members/" + $store.state.auth.user.MemberID' class='button'>About You</nuxt-link>
       </div>
       <div class='button-group'>

@@ -7,14 +7,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       autoIncrement: true
     },
-    PlayerCount: {
-      type: DataTypes.INTEGER,
-      validate: {
-        min: 1,
-        max: 4
-      },
-      allowNull: false
-    },
     CartCount: {
       type: DataTypes.INTEGER,
       validate: {
@@ -38,7 +30,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   TeeTime.associate = function (models) {
-    TeeTime.belongsTo(models.Member, { foreignKey: 'MemberID', targetKey: 'MemberID' });
+    TeeTime.belongsTo(models.Member, { foreignKey: 'MemberID', targetKey: 'MemberID', as: 'P1' });
+    TeeTime.belongsTo(models.Member, { foreignKey: 'Player2', targetKey: 'MemberID', as: 'P2' });
+    TeeTime.belongsTo(models.Member, { foreignKey: 'Player3', targetKey: 'MemberID', as: 'P3' });
+    TeeTime.belongsTo(models.Member, { foreignKey: 'Player4', targetKey: 'MemberID', as: 'P4' });
     // associations can be defined here
   };
   return TeeTime;

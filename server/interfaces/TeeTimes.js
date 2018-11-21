@@ -5,12 +5,13 @@ module.exports = class TeeTimes {
     this.db = this.client.db;
   }
 
-  async addTeeTime(MemberID, PlayerCount, CartCount, date) {
+  async addTeeTime(MemberID, PlayerCount, CartCount, date, Player2, Player3, Player4) {
     console.log('Adding Tee Time');
     try {
       console.log(date);
       await this.db.TeeTime.create({
-        MemberID, PlayerCount, CartCount, Date: date
+        MemberID, PlayerCount, CartCount, Date: date,
+        Player2, Player3, Player4
       });
 
       return true;
@@ -41,7 +42,18 @@ module.exports = class TeeTimes {
     let teetimes = await this.db.TeeTime.findAll({
       where: {
         MemberID: memberId
-      }
+      },
+      include: ['P1', 'P2', 'P3', 'P4']
+    });
+    teetimes.forEach(element => {
+      if (teetimes.P1)
+        teetimes.P1 = teetimes.P1.dataValues;
+      if (teetimes.P2)
+        teetimes.P2 = teetimes.P2.dataValues;
+      if (teetimes.P3)
+        teetimes.P3 = teetimes.P3.dataValues;
+      if (teetimes.P4)
+        teetimes.P4 = teetimes.P4.dataValues;
     });
     return teetimes;
   }

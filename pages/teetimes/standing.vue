@@ -2,32 +2,15 @@
   <div>
     <section class='container'>
       <form ref='form'>
-        <h2>New TeeTime</h2>
-        <label>Players</label>
-        <div class='button-group'>
-          <div>
-            <label>Player 1</label>
-            <input v-model='name' type='number' placeholder='Player 1' disabled readonly>
-          </div>
-          <div>
-            <label>Player 2</label>
-            <input v-model='teetime.players[0]' type='number' placeholder='Player 2'>
-          </div>
-        </div>
-        <div class='button-group'>
-          <div>
-            <label>Player 3</label>
-            <input v-model='teetime.players[1]' type='number' placeholder='Player 3'>
-          </div>
-          <div>
-            <label>Player 4</label>
-            <input v-model='teetime.players[2]' type='number' placeholder='Player 4'>
-          </div>
-        </div>
+        <h2>New Standing TeeTime</h2>
+        <label>Player Count</label>
+        <input v-model='teetime.PlayerCount' type='number' placeholder='Player Count' min='1' max='4' required>
         <label>Cart Count</label>
         <input v-model='teetime.CartCount' type='number' placeholder='Cart Count' min='1' max='4' required>
-        <label>Date (dd/mm/yyyy)</label>
-        <input v-model='teetime.Date' type='date' placeholder='Date' required>
+        <label>Start Date (dd/mm/yyyy)</label>
+        <input v-model='teetime.StartDate' type='date' placeholder='Start Date' required>
+        <label>End Date (dd/mm/yyyy)</label>
+        <input v-model='teetime.EndDate' type='date' placeholder='Date' required>
         <label>Time</label>
         <div class='button-group'>
           <input v-model='Hours' type='number' placeholder='Hour' class='margin' min='0' max='12' required>
@@ -67,7 +50,7 @@ export default {
   data: () => ({
     teetime: {
       MemberID: 0,
-      players: [null, null, null],
+      PlayerCount: undefined,
       CartCount: undefined,
       Date: moment().format('YYYY-MM-DD')
     },
@@ -78,9 +61,6 @@ export default {
     error: ''
   }),
   computed: {
-    name() {
-      return this.$store.state.auth.user.MemberID;
-    },
     date() {
       console.log(this.teetime.Date);
       let d = moment(this.teetime.Date);
@@ -99,12 +79,12 @@ export default {
   async asyncData({ params, $axios }) {},
   methods: {
     validate(teetime) {
-      // if (isNaN(teetime.PlayerCount))
-      //   return (this.error = 'PlayerCount is not a number.');
-      // if (teetime.PlayerCount < 1)
-      //   return (this.error = 'PlayerCount is less than 1.');
-      // if (teetime.PlayerCount > 4)
-      //   return (this.error = 'PlayerCount is greater than 4.');
+      if (isNaN(teetime.PlayerCount))
+        return (this.error = 'PlayerCount is not a number.');
+      if (teetime.PlayerCount < 1)
+        return (this.error = 'PlayerCount is less than 1.');
+      if (teetime.PlayerCount > 4)
+        return (this.error = 'PlayerCount is greater than 4.');
 
       if (isNaN(teetime.CartCount))
         return (this.error = 'CartCount is not a number.');
@@ -123,19 +103,15 @@ export default {
       return true;
     },
     async submit() {
-      let p = this.teetime.players.filter(p => p);
       let teetime = {
         MemberID: this.$store.state.auth.id,
         PlayerCount: Number(this.teetime.PlayerCount),
         CartCount: Number(this.teetime.CartCount),
-        Player2: p[0],
-        Player3: p[1],
-        Player4: p[2],
         Date: this.date
       };
       if (this.$refs.form.reportValidity() && this.validate(teetime) === true) {
         try {
-          await this.$axios.$put('/teetimes', teetime);
+          await this.$axios.$put('/teetimes/standing', teetime);
           this.$router.push('/');
         } catch (err) {
           this.error = err.message + '\n\n' + err.response.data;
