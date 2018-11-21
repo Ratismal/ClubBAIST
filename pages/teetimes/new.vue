@@ -1,40 +1,42 @@
 <template>
   <div>
     <section class='container'>
-      <h2>New TeeTime</h2>
-      <label>Player Count</label>
-      <input v-model='teetime.PlayerCount' type='number' placeholder='Player Count'>
-      <label>Cart Count</label>
-      <input v-model='teetime.CartCount' type='number' placeholder='Cart Count'>
-      <label>Date</label>
-      <input v-model='teetime.Date' type='date' placeholder='Date'>
-      <label>Time</label>
-      <div class='button-group'>
-        <input v-model='Hours' type='number' placeholder='Hour' class='margin' min='0' max='12'>
-        <span class='time-separator'>:</span>
-        <select v-model='Minutes' class='margin'>
-          <option value='0'>00</option>
-          <option value='7'>07</option>
-          <option value='15'>15</option>
-          <option value='22'>22</option>
-          <option value='30'>30</option>
-          <option value='37'>37</option>
-          <option value='45'>45</option>
-          <option value='52'>52</option>
-        </select>
-        <select v-model='AM'>
-          <option value='true' selected>AM</option>
-          <option value='false'>PM</option>
-        </select>
-      </div>
-      {{ formattedDate }}
-      <div class='button-group'>
-        <button class='button' @click.prevent='submit'>
-          Submit
-        </button>
-      </div>
+      <form ref='form'>
+        <h2>New TeeTime</h2>
+        <label>Player Count</label>
+        <input v-model='teetime.PlayerCount' type='number' placeholder='Player Count' min='1' max='4' required>
+        <label>Cart Count</label>
+        <input v-model='teetime.CartCount' type='number' placeholder='Cart Count' min='1' max='4' required>
+        <label>Date (dd/mm/yyyy)</label>
+        <input v-model='teetime.Date' type='date' placeholder='Date' required>
+        <label>Time</label>
+        <div class='button-group'>
+          <input v-model='Hours' type='number' placeholder='Hour' class='margin' min='0' max='12' required>
+          <span class='time-separator'>:</span>
+          <select v-model='Minutes' class='margin' required>
+            <option value='0'>00</option>
+            <option value='7'>07</option>
+            <option value='15'>15</option>
+            <option value='22'>22</option>
+            <option value='30'>30</option>
+            <option value='37'>37</option>
+            <option value='45'>45</option>
+            <option value='52'>52</option>
+          </select>
+          <select v-model='AM' required>
+            <option value='true' selected>AM</option>
+            <option value='false'>PM</option>
+          </select>
+        </div>
+        {{ formattedDate }}
+        <div class='button-group'>
+          <button class='button' @click.prevent='submit'>
+            Submit
+          </button>
+        </div>
 
-      <p class='error'>{{ error }}</p>
+        <p class='error'>{{ error }}</p>
+      </form>
     </section>
   </div>
 </template>
@@ -105,7 +107,7 @@ export default {
         CartCount: Number(this.teetime.CartCount),
         Date: this.date
       };
-      if (this.validate(teetime) === true) {
+      if (this.$refs.form.reportValidity() && this.validate(teetime) === true) {
         try {
           await this.$axios.$put('/teetimes', teetime);
           this.$router.push('/');

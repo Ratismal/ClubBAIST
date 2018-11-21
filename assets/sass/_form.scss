@@ -12,8 +12,19 @@ input, select {
 
   border: 1.5px solid $inputColor;
 
+  transition-duration: 0.5s;
+
   &:focus {
     outline: none;
     border-color: $inputColorFocus;
+  }
+
+  &:invalid {
+  border: 1.5px solid $dbuttonColor;
+
+  }
+
+  option {
+    background-color: $background;
   }
 }

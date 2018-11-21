@@ -6,12 +6,14 @@
 
       <div class='teetime-wrapper'>
         <div v-for='teetime in teetimes' :key='teetime.TeeTimeID' class='teetime'>
-          <h3>{{ getDate(teetime.Date) }}</h3>
-          <div>ID: {{ teetime.TeeTimeID }}</div>
-          <div>Players: {{ teetime.PlayerCount }}</div>
-          <div>Carts: {{ teetime.CartCount }}</div>
+          <h3 class='center'>{{ getDate(teetime.Date) }}</h3>
+          <div class='button-group'>
+            <!-- <div>ID: {{ teetime.TeeTimeID }}</div> -->
+            <div class='item'>Players: {{ teetime.PlayerCount }}</div>
+            <div class='item'>Carts: {{ teetime.CartCount }}</div>
+            <button class='button danger' @click.prevent='deleteTeetime(teetime.TeeTimeID)'>Delete</button>
+          </div>
           <br>
-          <button class='button danger full' @click.prevent='deleteTeetime(teetime.TeeTimeID)'>Delete</button>
         </div>
       </div>
 
@@ -64,6 +66,14 @@ export default {
     margin: 10px;
     flex: 1 0 auto;
     display: block;
+  }
+}
+
+.button-group {
+  align-items: baseline;
+
+  .item {
+    flex: 1;
   }
 }
 </style>
