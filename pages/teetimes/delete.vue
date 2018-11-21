@@ -9,11 +9,11 @@
           <h3 class='center'>{{ getDate(teetime.Date) }}</h3>
           <div class='button-group'>
             <!-- <div>ID: {{ teetime.TeeTimeID }}</div> -->
+            <div class='item left'>
+              <div v-for='player in getPlayers(teetime)' :key='player' class='item left'>{{ player }}</div>
+            </div>
             <div class='item'>Carts: {{ teetime.CartCount }}</div>
             <button class='button danger' @click.prevent='deleteTeetime(teetime.TeeTimeID)'>Delete</button>
-          </div>
-          <div class='button-group'>
-            <span v-for='player in getPlayers(teetime)' :key='player' class='item'>{{ player }}</span>
           </div>
           <br>
         </div>
@@ -77,12 +77,12 @@ export default {
 }
 
 .button-group {
-  align-items: baseline;
+  align-items: center;
   justify-content: space-around;
   margin-bottom: 5px;
 
   .item {
-    flex: 1 0;
+    flex: 1 1 auto;
     text-align: center;
   }
 }
