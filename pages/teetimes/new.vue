@@ -12,7 +12,16 @@
       <div class='button-group'>
         <input v-model='Hours' type='number' placeholder='Hour' class='margin' min='0' max='12'>
         <span class='time-separator'>:</span>
-        <input v-model='Minutes' type='number' placeholder='Minute' class='margin' min='0' max='59'>
+        <select v-model='Minutes' class='margin'>
+          <option value='0'>00</option>
+          <option value='7'>07</option>
+          <option value='15'>15</option>
+          <option value='22'>22</option>
+          <option value='30'>30</option>
+          <option value='37'>37</option>
+          <option value='45'>45</option>
+          <option value='52'>52</option>
+        </select>
         <select v-model='AM'>
           <option value='true' selected>AM</option>
           <option value='false'>PM</option>
@@ -42,7 +51,7 @@ export default {
       Date: moment().format('YYYY-MM-DD')
     },
     Hours: null,
-    Minutes: null,
+    Minutes: 0,
     AM: 'true',
     validatedTeetime: null,
     error: ''

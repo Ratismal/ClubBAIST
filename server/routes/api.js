@@ -1,4 +1,5 @@
 const router = require('koa-router');
+const moment = require('moment');
 
 module.exports = class ApiRoute {
   constructor(client, app) {
@@ -36,9 +37,17 @@ module.exports = class ApiRoute {
   async putTeeTimes(ctx, next) {
     let body = ctx.request.body;
     console.log(ctx.request.body);
+
+    let d = moment(body.Date);
+
+    ctx.assert([0, 7, 15, 22, 30, 37, 45, 52].includes(d.minutes()), 400, 'The date\'s minutes must be one of 0, 7, 15, 22, 30, 37, 45, or 52');
+
     let res = await this.client.manager.reserveTeeTime(body.MemberID, body.PlayerCount, body.CartCount, body.Date);
     ctx.assert(!res.error,
-      400, `Validation Error(s): ${res.err.errors.map(e => e.message).join(', ')}`);
+      400, res.err ? (res.err.errors
+        ? `Validation Error(s): ${res.err.errors.map(e => e.message).join(', ')}`
+        : res.err.message)
+        : 'Invalid Request');
     ctx.status = 200;
     ctx.body = { message: 'OK' };
   }

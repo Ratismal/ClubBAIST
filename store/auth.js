@@ -1,7 +1,7 @@
 export function state() {
   return {
     user: null,
-    // hardcode to an id of 1 for now,
+    // hardcode to an id of 0 for now,
     // auth is out of scope
     id: 0
   };
