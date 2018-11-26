@@ -5,8 +5,8 @@ module.exports = class Members {
     this.db = this.client.db;
   }
 
-  async getMember(id) {
-    let member = await this.db.Member.findByPk(id);
+  async getMember(memberID) {
+    let member = await this.db.Member.findByPk(memberID);
 
     return member;
   }

@@ -9,20 +9,25 @@ module.exports = class CBManager {
     this.TeeTimes = new TeeTimes(this);
   }
 
-  async getMember(id) {
-    return await this.Members.getMember(id);
+  async reserveTeeTime(teetime) {
+    return await this.TeeTimes.addTeeTime(teetime);
   }
 
-  async reserveTeeTime(...args) {
-    console.log('Reserving Tee Time');
-    return await this.TeeTimes.addTeeTime(...args);
+  async cancelTeeTime(teetimeID) {
+    return await this.TeeTimes.deleteTeeTime(teetimeID);
   }
 
-  async listMemberTeeTimes(memberId) {
-    return await this.TeeTimes.getMemberTeeTimes(memberId);
+  async reserveStandingTeeTime(standingTeetime) {
+    return await this.TeeTimes.addStandingTeeTime(standingTeetime);
   }
 
-  async cancelTeeTime(teeTimeID) {
-    return await this.TeeTimes.deleteTeeTime(teeTimeID);
+  async getMember(memberID) {
+    return await this.Members.getMember(memberID);
   }
+
+  async listMemberTeeTimes(memberID) {
+    return await this.TeeTimes.getMemberTeeTimes(memberID);
+  }
+
+
 };
