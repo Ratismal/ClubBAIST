@@ -1,36 +1,33 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
   let Company = sequelize.define('Company', {
+    CompanyID: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+      autoIncrement: true
+    },
     CompanyName: {
       allowNull: false,
-      primaryKey: true,
-      type: DataTypes.STRING(25)
+      type: Sequelize.TEXT
     },
     Address: {
-      type: DataTypes.STRING(100),
+      type: Sequelize.TEXT,
       allowNull: false
     },
     PostalCode: {
-      type: DataTypes.STRING(6),
+      type: Sequelize.STRING(7),
       validate: {
-        is: /^[A-Z]\d{3}$/
+        is: /^[A-Z]\d[A-Z] \d[A-Z]\d$/
       },
       allowNull: false
     },
     Phone: {
-      type: DataTypes.STRING(12),
+      type: Sequelize.STRING(12),
       validate: {
         is: /^\d{3}-\d{3}-\d{4}$/
       },
       allowNull: false
-    },
-    createdAt: {
-      allowNull: false,
-      type: DataTypes.DATE
-    },
-    updatedAt: {
-      allowNull: false,
-      type: DataTypes.DATE
     }
   });
 

@@ -1,48 +1,71 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, Sequelize) => {
     const TeeTime = sequelize.define('StandingTeeTime', {
-        MemberID: {
+        StandingTeeTimeID: {
             allowNull: false,
             primaryKey: true,
-            type: DataTypes.INTEGER
+            type: Sequelize.INTEGER,
+            autoIncrement: true
         },
-        DayOfWeek: {
-            type: DataTypes.INTEGER,
+        Player1ID: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        Player2ID: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        Player3ID: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        Player4ID: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        RequestedDay: {
+            type: Sequelize.INTEGER,
             validate: {
-                min: 1,
-                max: 4
+                min: 0,
+                max: 6
             },
             allowNull: false
         },
-        Time: {
-            type: DataTypes.TIME,
-            allowNull: false,
-            unique: true
+        RequestedTeeTime: {
+            type: Sequelize.TIME,
+            allowNull: false
         },
-        StartDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            unique: true
+        RequestedStartDate: {
+            type: Sequelize.DATE,
+            allowNull: false
         },
-        EndDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            unique: true
+        RequestedEndDate: {
+            type: Sequelize.DATE,
+            allowNull: false
         },
-        createdAt: {
-            allowNull: false,
-            type: DataTypes.DATE
+        ApprovedTeeTime: {
+            type: Sequelize.TIME,
+            allowNull: true
         },
-        updatedAt: {
-            allowNull: false,
-            type: DataTypes.DATE
+        ApprovedDate: {
+            type: Sequelize.TIME,
+            allowNull: true
+        },
+        PriorityNumber: {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
+        ApproverID: {
+            type: Sequelize.INTEGER,
+            allowNull: false
         }
     });
     TeeTime.associate = function (models) {
-        TeeTime.belongsTo(models.Member, { foreignKey: 'MemberID', targetKey: 'MemberID', as: 'P1' });
-        TeeTime.belongsTo(models.Member, { foreignKey: 'Player2', targetKey: 'MemberID', as: 'P2' });
-        TeeTime.belongsTo(models.Member, { foreignKey: 'Player3', targetKey: 'MemberID', as: 'P3' });
-        TeeTime.belongsTo(models.Member, { foreignKey: 'Player4', targetKey: 'MemberID', as: 'P4' });
+        TeeTime.belongsTo(models.Member, { foreignKey: 'Player1ID', targetKey: 'MemberID', as: 'Player1' });
+        TeeTime.belongsTo(models.Member, { foreignKey: 'Player2ID', targetKey: 'MemberID', as: 'Player2' });
+        TeeTime.belongsTo(models.Member, { foreignKey: 'Player3ID', targetKey: 'MemberID', as: 'Player3' });
+        TeeTime.belongsTo(models.Member, { foreignKey: 'Player4ID', targetKey: 'MemberID', as: 'Player4' });
+        TeeTime.belongsTo(models.Member, { foreignKey: 'ApproverID', targetKey: 'MemberID', as: 'Approver' });
         // associations can be defined here
     };
     return TeeTime;

@@ -2,21 +2,47 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('MembershipTiers', {
+      TierType: {
+        primaryKey: true,
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        autoIncrement: true
+      },
+      Name: {
+        allowNull: false,
+        type: Sequelize.TEXT
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+
     console.log('Defining Companies');
     await queryInterface.createTable('Companies', {
+      CompanyID: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true
+      },
       CompanyName: {
         allowNull: false,
-        primaryKey: true,
-        type: Sequelize.STRING(25)
+        type: Sequelize.TEXT
       },
       Address: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.TEXT,
         allowNull: false
       },
       PostalCode: {
-        type: Sequelize.STRING(6),
+        type: Sequelize.STRING(7),
         validate: {
-          is: /^[A-Z]\d{3}$/
+          is: /^[A-Z]\d[A-Z] \d[A-Z]\d$/
         },
         allowNull: false
       },
@@ -46,24 +72,24 @@ module.exports = {
         autoIncrement: true
       },
       FirstName: {
-        type: Sequelize.STRING(25),
+        type: Sequelize.TEXT,
         allowNull: false
       },
       LastName: {
-        type: Sequelize.STRING(25),
+        type: Sequelize.TEXT,
         allowNull: false
       },
       Address: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.TEXT,
         allowNull: false
       },
       PostalCode: {
-        type: Sequelize.STRING(6),
+        type: Sequelize.TEXT,
         validate: {
           is: /^[A-Z]\d{3}$/
         }
       },
-      Phone1: {
+      Phone: {
         type: Sequelize.STRING(12),
         validate: {
           is: /^\d{3}-\d{3}-\d{4}$/
@@ -78,7 +104,7 @@ module.exports = {
         allowNull: true
       },
       Email: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.TEXT,
         validate: {
           isEmail: true
         },
@@ -89,19 +115,27 @@ module.exports = {
         allowNull: false
       },
       Occupation: {
-        type: Sequelize.STRING(25),
+        type: Sequelize.TEXT,
         allowNull: true
       },
-      CompanyName: {
-        type: Sequelize.STRING(25),
+      CompanyID: {
+        type: Sequelize.INTEGER,
         references: {
           model: 'Companies',
-          key: 'CompanyName'
+          key: 'CompanyID'
         },
         allowNull: true
       },
-      Tier: {
-        type: Sequelize.ENUM('GOLD', 'SILVER', 'BRONZE', 'COPPER'),
+      MembershipTierType: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'MembershipTiers',
+          key: 'TierType'
+        },
+        allowNull: false
+      },
+      Password: {
+        type: Sequelize.TEXT,
         allowNull: false
       },
       createdAt: {
@@ -122,7 +156,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         autoIncrement: true
       },
-      MemberID: {
+      Player1ID: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -130,20 +164,40 @@ module.exports = {
           key: 'MemberID'
         }
       },
-      PlayerCount: {
+      Player2ID: {
         type: Sequelize.INTEGER,
-        validate: {
-          min: 1,
-          max: 4
-        },
-        allowNull: false
+        allowNull: true,
+        references: {
+          model: 'Members',
+          key: 'MemberID'
+        }
+      },
+      Player3ID: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Members',
+          key: 'MemberID'
+        }
+      },
+      Player4ID: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Members',
+          key: 'MemberID'
+        }
       },
       CartCount: {
         type: Sequelize.INTEGER,
         validate: {
-          min: 1,
+          min: 0,
           max: 4
         },
+        allowNull: false
+      },
+      Timeslot: {
+        type: Sequelize.DATE,
         allowNull: false
       },
       createdAt: {
@@ -155,11 +209,104 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+
+    await queryInterface.createTable('StandingTeeTimes', {
+      StandingTeeTimeID: {
+        allowNull: false,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        autoIncrement: true
+      },
+      Player1ID: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Members',
+          key: 'MemberID'
+        }
+      },
+      Player2ID: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Members',
+          key: 'MemberID'
+        }
+      },
+      Player3ID: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Members',
+          key: 'MemberID'
+        }
+      },
+      Player4ID: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Members',
+          key: 'MemberID'
+        }
+      },
+      RequestedDay: {
+        type: Sequelize.INTEGER,
+        validate: {
+          min: 0,
+          max: 6
+        },
+        allowNull: false
+      },
+      RequestedTeeTime: {
+        type: Sequelize.TIME,
+        allowNull: false
+      },
+      RequestedStartDate: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      RequestedEndDate: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      ApprovedTeeTime: {
+        type: Sequelize.TIME,
+        allowNull: true
+      },
+      ApprovedDate: {
+        type: Sequelize.TIME,
+        allowNull: true
+      },
+      PriorityNumber: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
+      ApproverID: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Members',
+          key: 'MemberID'
+        }
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+
+
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('TeeTimes');
+    await queryInterface.dropTable('StandingTeeTimes');
     await queryInterface.dropTable('Members');
     await queryInterface.dropTable('Companies');
+    await queryInterface.dropTable('MembershipTiers');
   }
 };
