@@ -72,7 +72,7 @@ module.exports = {
       Address: '123 Residence Lane',
       PostalCode: 'A1B2C3',
       Phone: '123-456-7890',
-      Email: 'sm@clubbaist.com',
+      Email: 'cc@clubbaist.com',
       DateOfBirth: new Date(1980, 1, 1, 1, 1, 1),
       MembershipTierType: 5,
       Password: 'password',

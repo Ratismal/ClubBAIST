@@ -1,6 +1,6 @@
 <template>
   <section class='container'>
-    <div class='center'>
+    <div v-if='$store.state.auth.user' class='center'>
       <h2 class='subtitle'>
         Welcome, {{ $store.state.auth.user.FirstName }} {{ $store.state.auth.user.LastName }}.
       </h2>
@@ -14,7 +14,12 @@
       </div>
       <div class='button-group'>
         <a href='https://github.com/Ratismal/ClubBAIST' target='_blank' class='button'>Source Code</a>
+        <nuxt-link to='/login' class='button'>log in pls im very lonely</nuxt-link>
       </div>
+    </div>
+    <div v-else class='center'>
+      <br>
+      <nuxt-link to='/login' class='button'>log in pls im very lonely</nuxt-link>
     </div>
   </section>
 </template>

@@ -6,24 +6,28 @@
         <label>Players</label>
         <div class='button-group'>
           <div>
-            <label>Player 1</label>
-            <input v-model='name' type='number' placeholder='Player 1' disabled readonly>
+            <span>{{ $store.state.auth.user.FirstName }} {{ $store.state.auth.user.LastName }}</span>
           </div>
           <div>
-            <label>Player 2</label>
-            <input v-model='teetime.players[0]' type='number' placeholder='Player 2'>
+            <span>{{ player2 ? player2.FirstName + ' ' + player2.LastName : ':(' }}</span>
+            <button class='button' @click.prevent='player2Displayed = true'>Lookup</button>
           </div>
         </div>
         <div class='button-group'>
           <div>
-            <label>Player 3</label>
-            <input v-model='teetime.players[1]' type='number' placeholder='Player 3'>
+            <span>{{ player3 ? player3.FirstName + ' ' + player3.LastName : ':(' }}</span>
+            <button class='button' @click.prevent='player3Displayed = true'>Lookup</button>
           </div>
           <div>
-            <label>Player 4</label>
-            <input v-model='teetime.players[2]' type='number' placeholder='Player 4'>
+            <span>{{ player4 ? player4.FirstName + ' ' + player4.LastName : ':(' }}</span>
+            <button class='button' @click.prevent='player4Displayed = true'>Lookup</button>
           </div>
         </div>
+
+        <member-lookup :displayed.sync='player2Displayed' :chosen.sync='player2' @close='player2Displayed = false'/>
+        <member-lookup :displayed.sync='player3Displayed' :chosen.sync='player3' @close='player3Displayed = false'/>
+        <member-lookup :displayed.sync='player4Displayed' :chosen.sync='player4' @close='player4Displayed = false'/>
+
         <label>Cart Count</label>
         <input v-model='teetime.CartCount' type='number' placeholder='Cart Count' min='1' max='4' required>
         <label>Date (dd/mm/yyyy)</label>
@@ -62,8 +66,10 @@
 
 <script>
 import moment from 'moment';
+import MemberLookup from '@/components/MemberLookup.vue';
 
 export default {
+  components: {MemberLookup},
   data: () => ({
     teetime: {
       MemberID: 0,
@@ -71,6 +77,12 @@ export default {
       CartCount: undefined,
       Date: moment().format('YYYY-MM-DD')
     },
+    player2Displayed: false,
+    player3Displayed: false,
+    player4Displayed: false,
+    player2: null,
+    player3: null,
+    player4: null,
     Hours: null,
     Minutes: 0,
     AM: 'true',

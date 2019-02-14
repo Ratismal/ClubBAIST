@@ -18,15 +18,38 @@ module.exports = class ApiRoute {
       await next();
     });
 
+    this.router.post('/login', this.login.bind(this));
+
     this.router.get('/teetimes', this.getTeeTimes.bind(this));
     this.router.put('/teetimes', this.putTeeTimes.bind(this));
     this.router.delete('/teetimes/:id', this.deleteTeeTimes.bind(this));
 
+    this.router.get('/members', this.getMembers.bind(this));
     this.router.get('/members/:id', this.getMember.bind(this));
     this.router.get('/members/:id/teetimes', this.getMemberTeetimes.bind(this));
 
     this.app.use(this.router.routes())
       .use(this.router.allowedMethods());
+  }
+
+  async login(ctx, next) {
+    let body = ctx.request.body;
+    let matches = (await this.client.db.Member.findAll({
+      where: {
+        Email: body.email
+      }
+    }));
+    let user = matches[0];
+
+    ctx.assert(user, 404, 'nobody here');
+
+    ctx.assert(body.password === user.Password, 401, 'go away');
+
+    ctx.cookies.set('user-id', user.MemberID);
+    ctx.body = {
+      message: 'ilu'
+    };
+    ctx.status = 200;
   }
 
   async getTeeTimes(ctx, next) {
@@ -58,6 +81,20 @@ module.exports = class ApiRoute {
       400, 'Invalid request');
     ctx.status = 200;
     ctx.body = { message: 'OK' };
+  }
+
+  async getMembers(ctx, next) {
+    let query = ctx.request.query;
+    let S = this.client.db.Sequelize;
+    let q = query.q || '';
+    console.log(query);
+    let members = await this.client.db.Member.findAll({
+      where: S.where(S.fn('concat', S.col('FirstName'), ' ', S.col('LastName')), {
+        like: `%${q}%`
+      })
+    });
+    ctx.body = {message: 'ok', members: members.map(m=>m.dataValues)};
+    ctx.status = 200;
   }
 
   async getMember(ctx, next) {
