@@ -1,5 +1,7 @@
 @import 'variables';
 @import 'form';
+@import 'flex';
+@import 'grid';
 
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 
@@ -94,4 +96,15 @@ h1 a {
 
 .error {
   white-space: pre-wrap;
+}
+
+.member-box {
+  background: rgba(0, 0, 0, 0.3);
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 8px;
+
+  .button {
+    margin-right: 1rem;
+  }
 }

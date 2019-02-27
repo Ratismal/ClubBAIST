@@ -1,5 +1,5 @@
 <template>
-  <div :class='displayed ? "" : "hidden"'>
+  <div>
     <section class='container'>
       <form ref='form'>
         <h3>Find Member</h3>
@@ -10,7 +10,7 @@
         <button class='button full' @click.prevent='search'>Search</button>
         <br>
         <div class='member-wrap'>
-          <div v-for='member in members' :key='member.MemberID' class='member'>
+          <div v-for='member in filteredMembers' :key='member.MemberID' class='member-box'>
             <button class='button' @click.prevent='choose(member)'>this one!</button>
             <span>{{ member.FirstName }} {{ member.LastName }}</span>
           </div>
@@ -28,13 +28,9 @@
 <script>
 export default {
     props: {
-        displayed: {
-            default: '',
-            type: String
-        },
-        chosen: {
-            default: null,
-            type: Object
+        blacklist: {
+            type: Array,
+            default: () => []
         }
     },
     data() {
@@ -43,6 +39,14 @@ export default {
             members: []
         };
     },
+    computed: {
+        filteredMembers: {
+            get() {
+                return this.members.filter(m => !this.blacklist.find(b => b.MemberID === m.MemberID)
+                    && m.MemberID !== this.$store.state.auth.id);
+            }
+        }
+    },
     methods: {
         async search() {
             let res = await this.$axios.$get('/members?q=' + this.searchTerm);
@@ -50,13 +54,10 @@ export default {
             this.members = res.members;
         },
         choose(member) {
-            this.chosen = member;
-            this.displayed = false;
-            this.close();
+            this.$emit('chosen', member);
         },
         close() {
-            this.displayed = false;
-            this.$emit('closed');
+            this.$emit('close');
         }
     }
 };

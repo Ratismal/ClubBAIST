@@ -4,29 +4,16 @@
       <form ref='form'>
         <h2>New TeeTime</h2>
         <label>Players</label>
-        <div class='button-group'>
-          <div>
-            <span>{{ $store.state.auth.user.FirstName }} {{ $store.state.auth.user.LastName }}</span>
-          </div>
-          <div>
-            <span>{{ player2 ? player2.FirstName + ' ' + player2.LastName : ':(' }}</span>
-            <button class='button' @click.prevent='player2Displayed = true'>Lookup</button>
+        <div class='catflex vertical'>
+          <!-- no-op -->
+          <div v-for='player in teetime.players' :key='player.MemberID' class='catflex member-box vert-baseline'>
+            <button class='button danger' @click.prevent='removeMember(player.MemberID)'>Remove</button><span class='grow'>{{ player.FirstName }} {{ player.LastName }}</span>
           </div>
         </div>
-        <div class='button-group'>
-          <div>
-            <span>{{ player3 ? player3.FirstName + ' ' + player3.LastName : ':(' }}</span>
-            <button class='button' @click.prevent='player3Displayed = true'>Lookup</button>
-          </div>
-          <div>
-            <span>{{ player4 ? player4.FirstName + ' ' + player4.LastName : ':(' }}</span>
-            <button class='button' @click.prevent='player4Displayed = true'>Lookup</button>
-          </div>
+        <button v-if='teetime.players.length < playerLimit' class='button full' @click.prevent='toggleMemberLookup'>Add Member</button>
+        <div v-if='displayMemberLookup' class='behind-lookup'>
+          <member-lookup :blacklist='teetime.players' @chosen='addMember' @close='toggleMemberLookup'/>
         </div>
-
-        <member-lookup :displayed.sync='player2Displayed' :chosen.sync='player2' @close='player2Displayed = false'/>
-        <member-lookup :displayed.sync='player3Displayed' :chosen.sync='player3' @close='player3Displayed = false'/>
-        <member-lookup :displayed.sync='player4Displayed' :chosen.sync='player4' @close='player4Displayed = false'/>
 
         <label>Cart Count</label>
         <input v-model='teetime.CartCount' type='number' placeholder='Cart Count' min='1' max='4' required>
@@ -70,25 +57,26 @@ import MemberLookup from '@/components/MemberLookup.vue';
 
 export default {
   components: {MemberLookup},
-  data: () => ({
-    teetime: {
-      MemberID: 0,
-      players: [null, null, null],
-      CartCount: undefined,
-      Date: moment().format('YYYY-MM-DD')
-    },
-    player2Displayed: false,
-    player3Displayed: false,
-    player4Displayed: false,
-    player2: null,
-    player3: null,
-    player4: null,
-    Hours: null,
-    Minutes: 0,
-    AM: 'true',
-    validatedTeetime: null,
-    error: ''
-  }),
+  data() {
+    return {
+      teetime: {
+        MemberID: 0,
+        players: [],
+        CartCount: undefined,
+        Date: moment().format('YYYY-MM-DD')
+      },
+      playerLimit: this.$store.state.auth.clerk ? 4 : 3,
+      player2: null,
+      player3: null,
+      player4: null,
+      Hours: null,
+      Minutes: 0,
+      AM: 'true',
+      validatedTeetime: null,
+      error: '',
+      displayMemberLookup: false
+    };
+  },
   computed: {
     name() {
       return this.$store.state.auth.user.MemberID;
@@ -108,8 +96,25 @@ export default {
       return this.date.format('LLLL');
     }
   },
+  mounted() {
+    console.log(this.$store.state.auth.user);
+  },
   async asyncData({ params, $axios }) {},
   methods: {
+    addMember(member) {
+      if (!this.teetime.players.find(p => p.MemberID === member.MemberID) && member.MemberID !== this.$store.state.auth.id) {
+        this.teetime.players.push(member);
+      }
+      if (this.teetime.players.length >= this.playerLimit) this.displayMemberLookup = false;
+    },
+    removeMember(memberID) {
+      let player = this.teetime.players.find(p => p.MemberID !== memberID);
+      this.teetime.players.splice(this.teetime.players.indexOf(player), 1);
+    },
+    toggleMemberLookup() {
+      if (this.teetime.players.length >= this.playerLimit) this.displayMemberLookup = false;
+      else this.displayMemberLookup = !this.displayMemberLookup;
+    },
     validate(teetime) {
       // if (isNaN(teetime.PlayerCount))
       //   return (this.error = 'PlayerCount is not a number.');
@@ -125,7 +130,7 @@ export default {
       if (teetime.CartCount > 4)
         return (this.error = 'CartCount is greater than 4.');
 
-      if (!teetime.Date.isValid())
+      if (!teetime.Timeslot.isValid())
         return (this.error = 'A valid date must be provided.');
       if (teetime.Date <= Date.now())
         return (this.error = 'The date must be later than today.');
@@ -136,14 +141,18 @@ export default {
     },
     async submit() {
       let p = this.teetime.players.filter(p => p);
+      if (!this.$store.state.auth.clerk) {
+        p.unshift(this.$store.state.auth.user);
+      }
+      p = p.map(m => m.MemberID);
       let teetime = {
-        MemberID: this.$store.state.auth.id,
         PlayerCount: Number(this.teetime.PlayerCount),
         CartCount: Number(this.teetime.CartCount),
-        Player2: p[0],
-        Player3: p[1],
-        Player4: p[2],
-        Date: this.date
+        Player1ID: p[0],
+        Player2ID: p[1],
+        Player3ID: p[2],
+        Player4ID: p[3],
+        Timeslot: this.date
       };
       if (this.$refs.form.reportValidity() && this.validate(teetime) === true) {
         try {
@@ -166,5 +175,17 @@ export default {
 }
 .button-group {
   align-items: center;
+}
+
+.behind-lookup {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+}
+
+label {
+    margin-top: 1rem;
+    display: block;
 }
 </style>

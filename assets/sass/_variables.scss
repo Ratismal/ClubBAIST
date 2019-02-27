@@ -12,3 +12,11 @@ $text: #eee;
 
 //  $background: #fff;
 //  $text: #131313;
+
+// responsive
+$break-small: 600px;
+$break-medium: 1600px;
+
+$small-screen: screen;
+$medium-screen: screen and (min-width: $break-small);
+$large-screen: screen and (min-width: $break-medium);

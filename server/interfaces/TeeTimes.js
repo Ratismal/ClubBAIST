@@ -36,21 +36,21 @@ module.exports = class TeeTimes {
   }
 
   async getMemberTeeTimes(memberID) {
+    let where = {};
+    if (memberID) where.Player1ID = memberID;
     let teetimes = await this.db.TeeTime.findAll({
-      where: {
-        MemberID: memberID
-      },
-      include: ['P1', 'P2', 'P3', 'P4']
+      where,
+      include: ['Player1', 'Player2', 'Player3', 'Player4']
     });
     teetimes.forEach(element => {
-      if (teetimes.P1)
-        teetimes.P1 = teetimes.P1.dataValues;
-      if (teetimes.P2)
-        teetimes.P2 = teetimes.P2.dataValues;
-      if (teetimes.P3)
-        teetimes.P3 = teetimes.P3.dataValues;
-      if (teetimes.P4)
-        teetimes.P4 = teetimes.P4.dataValues;
+      if (teetimes.Player1)
+        teetimes.Player1 = teetimes.Player1.dataValues;
+      if (teetimes.Player2)
+        teetimes.Player2 = teetimes.Player2.dataValues;
+      if (teetimes.Player3)
+        teetimes.Player3 = teetimes.Player3.dataValues;
+      if (teetimes.Player4)
+        teetimes.Player4 = teetimes.Player4.dataValues;
     });
     return teetimes;
   }

@@ -1,15 +1,15 @@
 export function state() {
   return {
     user: null,
-    // hardcode to an id of 0 for now,
-    // auth is out of scope
-    id: 1
+    id: 1,
+    clerk: false
   };
 };
 
 export const mutations = {
   setUser(state, user) {
     state.user = user;
+    state.clerk = user.MembershipTierType === 5;
   },
   setId(state, id) {
     state.id = id;

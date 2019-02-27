@@ -53,15 +53,24 @@ module.exports = class ApiRoute {
   }
 
   async getTeeTimes(ctx, next) {
+    let teetimes = await this.client.manager.listMemberTeeTimes();
     ctx.status = 200;
-    ctx.body = { message: 'hi' };
+    ctx.body = teetimes.map(tt => tt.dataValues);
+  }
+
+  async getTeeSheet(ctx, next) {
+    let query = ctx.request.query;
+    let q = query.q || '';
+    let teetimes = await this.client.manager.getTeeSheet(q);
+    ctx.status = 200;
+    ctx.body = teetimes.map(tt => tt.dataValues);
   }
 
   async putTeeTimes(ctx, next) {
     let body = ctx.request.body;
     console.log(ctx.request.body);
 
-    let d = moment(body.Date);
+    let d = moment(body.Timeslot);
 
     ctx.assert([0, 7, 15, 22, 30, 37, 45, 52].includes(d.minutes()), 400, 'The date\'s minutes must be one of 0, 7, 15, 22, 30, 37, 45, or 52');
 

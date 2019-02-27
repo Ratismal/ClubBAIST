@@ -30,9 +30,16 @@ import moment from 'moment';
 export default {
   async asyncData({ params, $axios, store }) {
     try {
-      let teetimes = await $axios.$get(
-        `/members/${store.state.auth.id}/teetimes`
-      );
+      let teetimes;
+      if (store.state.auth.clerk) {
+        teetimes = await $axios.$get(
+          `/teetimes`
+        );
+      } else {
+        teetimes = await $axios.$get(
+          `/members/${store.state.auth.id}/teetimes`
+        );
+      }
       console.log(teetimes);
       teetimes.sort((a, b) => {
         return moment(a.Date) - moment(b.Date);
@@ -56,7 +63,7 @@ export default {
       return moment(date).format('LLLL');
     },
     getPlayers(teetime) {
-      return [teetime.P1, teetime.P2, teetime.P3, teetime.P4]
+      return [teetime.Player1, teetime.Player2, teetime.Player3, teetime.Player4]
         .filter(p => p)
         .map(p => p.FirstName + ' ' + p.LastName);
     }
