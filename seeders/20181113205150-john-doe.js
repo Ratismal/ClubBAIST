@@ -54,6 +54,32 @@ module.exports = {
       updatedAt: new Date(2018, 1, 1, 1, 1, 1)
     },
     {
+      FirstName: 'Bronze2',
+      LastName: 'Member2',
+      Address: '123 Residence Lane',
+      PostalCode: 'A1B2C3',
+      Phone: '123-456-7890',
+      Email: 'bm2@clubbaist.com',
+      DateOfBirth: new Date(1980, 1, 1, 1, 1, 1),
+      MembershipTierType: 3,
+      Password: 'password',
+      createdAt: new Date(2018, 1, 1, 1, 1, 1),
+      updatedAt: new Date(2018, 1, 1, 1, 1, 1)
+    },
+    {
+      FirstName: 'Bronze3',
+      LastName: 'Member3',
+      Address: '123 Residence Lane',
+      PostalCode: 'A1B2C3',
+      Phone: '123-456-7890',
+      Email: 'bm3@clubbaist.com',
+      DateOfBirth: new Date(1980, 1, 1, 1, 1, 1),
+      MembershipTierType: 3,
+      Password: 'password',
+      createdAt: new Date(2018, 1, 1, 1, 1, 1),
+      updatedAt: new Date(2018, 1, 1, 1, 1, 1)
+    },
+    {
       FirstName: 'Copper',
       LastName: 'Member',
       Address: '123 Residence Lane',

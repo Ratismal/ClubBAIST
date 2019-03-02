@@ -48,7 +48,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: true
         },
         ApprovedDate: {
-            type: Sequelize.TIME,
+            type: Sequelize.DATE,
             allowNull: true
         },
         PriorityNumber: {
@@ -57,7 +57,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         ApproverID: {
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: true
         }
     });
     TeeTime.associate = function (models) {

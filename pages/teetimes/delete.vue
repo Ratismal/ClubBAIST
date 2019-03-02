@@ -1,12 +1,12 @@
 <template>
   <div>
-    <section class='container'>
+    <section v-if='$store.state.auth.user && ($store.state.auth.user.MembershipTierType !== 4 || $store.state.auth.clerk)' class='container'>
       <h2>Delete TeeTime</h2>
       <p>Please select the TeeTime you would like to delete from the list.</p>
 
       <div class='teetime-wrapper'>
         <div v-for='teetime in teetimes' :key='teetime.TeeTimeID' class='teetime'>
-          <h3 class='center'>{{ getDate(teetime.Date) }}</h3>
+          <h3 class='center'>{{ getDate(teetime.Timeslot) }}</h3>
           <div class='button-group'>
             <!-- <div>ID: {{ teetime.TeeTimeID }}</div> -->
             <div class='item left'>
@@ -20,6 +20,10 @@
       </div>
 
       <p>{{ error }}</p>
+    </section>
+    <section v-else class='container'>
+      <h1>Sorry</h1>
+      <p>You aren't allowed to view this page.</p>
     </section>
   </div>
 </template>

@@ -13,6 +13,10 @@
         <nuxt-link :to='"/members/" + $store.state.auth.user.MemberID' class='button'>About You</nuxt-link>
       </div>
       <div class='button-group'>
+        <nuxt-link v-if='$store.state.auth.clerk' to='/teetimes/approve' class='button'>Approve Standing</nuxt-link>
+        <nuxt-link to='/teesheet' class='button'>TeeSheet</nuxt-link>
+      </div>
+      <div class='button-group'>
         <a href='https://github.com/Ratismal/ClubBAIST' target='_blank' class='button'>Source Code</a>
         <nuxt-link to='/login' class='button'>log in pls im very lonely</nuxt-link>
       </div>

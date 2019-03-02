@@ -43,7 +43,7 @@ export default {
         filteredMembers: {
             get() {
                 return this.members.filter(m => !this.blacklist.find(b => b.MemberID === m.MemberID)
-                    && m.MemberID !== this.$store.state.auth.id);
+                    && m.MemberID !== this.$store.state.auth.id && m.MembershipTierType !== 4);
             }
         }
     },

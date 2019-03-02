@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class='container'>
+    <section v-if='$store.state.auth.user && $store.state.auth.user.MembershipTierType !== 4' class='container'>
       <form ref='form'>
         <h2>New TeeTime</h2>
         <label>Players</label>
@@ -34,8 +34,8 @@
             <option value='52'>52</option>
           </select>
           <select v-model='AM' required>
-            <option value='true' selected>AM</option>
-            <option value='false'>PM</option>
+            <option :value='true' selected>AM</option>
+            <option :value='false'>PM</option>
           </select>
         </div>
         {{ formattedDate }}
@@ -47,6 +47,10 @@
 
         <p class='error'>{{ error }}</p>
       </form>
+    </section>
+    <section v-else class='container'>
+      <h1>Sorry</h1>
+      <p>You aren't allowed to view this page.</p>
     </section>
   </div>
 </template>
@@ -69,9 +73,15 @@ export default {
       player2: null,
       player3: null,
       player4: null,
-      Hours: null,
+      availableHours: {
+        1: [{start: 0, end: 60 * 24}],
+        2: [{start: 0, end: 60 * 15}, {start: 60 * 17.5, end: 60 * 24}],
+        3: [{start: 0, end: 60 * 15}, {start: 60 * 18, end: 60 * 24}]
+      },
+      businessHours: {start: 60 * 6, end: 60 * 22},
+      Hours: 12,
       Minutes: 0,
-      AM: 'true',
+      AM: true,
       validatedTeetime: null,
       error: '',
       displayMemberLookup: false
@@ -86,9 +96,9 @@ export default {
       let d = moment(this.teetime.Date);
 
       d = d
-        .add(this.Hours, 'h')
+        .add(this.Hours == 12 ? 0 : this.Hours, 'h')
         .add(this.Minutes, 'm')
-        .add(this.AM === 'true' ? 0 : 12, 'h');
+        .add(this.AM ? 0 : 12, 'h');
 
       return d;
     },
@@ -122,7 +132,10 @@ export default {
       //   return (this.error = 'PlayerCount is less than 1.');
       // if (teetime.PlayerCount > 4)
       //   return (this.error = 'PlayerCount is greater than 4.');
+      console.log(teetime);
 
+      if (!teetime.Player1ID)
+        return (this.error = 'There must be at least one player.');
       if (isNaN(teetime.CartCount))
         return (this.error = 'CartCount is not a number.');
       if (teetime.CartCount < 1)
@@ -132,8 +145,29 @@ export default {
 
       if (!teetime.Timeslot.isValid())
         return (this.error = 'A valid date must be provided.');
-      if (teetime.Date <= Date.now())
+      if (teetime.Timeslot <= Date.now())
         return (this.error = 'The date must be later than today.');
+      let tier;
+      if (!this.$store.state.auth.clerk) {
+        tier = this.$store.state.auth.user.MembershipTierType;
+      } else tier = this.teetime.players[0].MembershipTierType;
+      const hours = this.availableHours[tier];
+      let hoursFine = false;
+      let compare = (teetime.Timeslot.hours() * 60) + teetime.Timeslot.minutes();
+
+      console.log(compare, hours, this.businessHours);
+
+      for (const hour of hours) {
+        if (compare >= hour.start && compare <= hour.end) hoursFine = true;
+      }
+      if (!hoursFine)
+        return (this.error = 'You cannot book a TeeTime in this timeslot with your current membership tier.');
+      if (compare < this.businessHours.start || compare > this.businessHours.end)
+        return (this.error = 'Club BAIST is not open at this timeslot.');
+
+      console.log(teetime.Timeslot - Date.now());
+      if (teetime.Timeslot - Date.now()  > (1000 * 60 * 60 * 24 * 7))
+        return (this.error = 'You cannot book a TeeTime greater than a week in advance.');
 
       this.error = '';
 
@@ -159,7 +193,7 @@ export default {
           await this.$axios.$put('/teetimes', teetime);
           this.$router.push('/');
         } catch (err) {
-          this.error = err.message + '\n\n' + err.response.data;
+          this.error = err.response.data;
           console.log(err.response);
         }
       }

@@ -283,7 +283,7 @@ module.exports = {
       },
       ApproverID: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'Members',
           key: 'MemberID'

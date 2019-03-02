@@ -1,5 +1,5 @@
-const Members = require('./Members');
-const TeeTimes = require('./TeeTimes');
+const Members = require('./MemberManager');
+const TeeTimes = require('./TeeTimeManager');
 
 module.exports = class CBManager {
   constructor(client) {
@@ -29,5 +29,15 @@ module.exports = class CBManager {
     return await this.TeeTimes.getMemberTeeTimes(memberID);
   }
 
+  async getTeeSheet(date) {
+    return await this.TeeTimes.getTeeSheet(date);
+  }
 
+  async getStandingTeeTimes() {
+    return await this.TeeTimes.getStandingTeeTimes();
+  }
+
+  async approveStandingTeeTimes(id, body) {
+    return await this.TeeTimes.approveStandingTeeTime(id, body);
+  }
 };
