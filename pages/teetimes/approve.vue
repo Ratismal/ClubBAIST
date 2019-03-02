@@ -24,7 +24,6 @@
           <span class='title'>Approved TeeTime</span>
           <div class='button-group'>
             <input v-model='teetime.hours' type='number' placeholder='Hour' class='margin' min='0' max='12' required>
-            <span class='time-separator'>:</span>
             <select v-model='teetime.minutes' class='margin' required>
               <option value='0'>00</option>
               <option value='7'>07</option>

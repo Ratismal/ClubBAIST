@@ -22,7 +22,6 @@
         <label>Time</label>
         <div class='button-group'>
           <input v-model='Hours' type='number' placeholder='Hour' class='margin' min='0' max='12' required>
-          <span class='time-separator'>:</span>
           <select v-model='Minutes' class='margin' required>
             <option value='0'>00</option>
             <option value='7'>07</option>
