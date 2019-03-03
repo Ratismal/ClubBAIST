@@ -90,9 +90,9 @@ export default {
       player3: null,
       player4: null,
       businessHours: {start: 60 * 6, end: 60 * 22},
-      Hours: 0,
+      Hours: 12,
       Minutes: 0,
-      AM: true,
+      AM: false,
       validatedTeetime: null,
       error: '',
       displayMemberLookup: false
@@ -172,9 +172,9 @@ export default {
       if (!this.$store.state.auth.clerk) {
         p.unshift(this.$store.state.auth.user);
       }
-      p = p.map(m => m.MemberID);
       if (p.length !== 4) return (this.error = 'There must be four registered players.');
       if (p[0].MembershipTierType !== 1) return (this.error = 'The first member must be Gold Tier.');
+      p = p.map(m => m.MemberID);
       let teetime = {
         PlayerCount: Number(this.teetime.PlayerCount),
         Player1ID: p[0],

@@ -79,6 +79,7 @@ module.exports = class TeeTimes {
       },
       include: ['Player1', 'Player2', 'Player3', 'Player4']
     });
+    console.log('day of week', dayOfWeek);
     const standingTeetimes = await this.db.StandingTeeTime.findAll({
       where: {
         RequestedDay: dayOfWeek,
@@ -89,7 +90,7 @@ module.exports = class TeeTimes {
           [this.db.Sequelize.Op.gte]: start.toDate()
         },
         ApprovedDate: {
-          [this.db.Sequelize.not]: null
+          [this.db.Sequelize.Op.not]: null
         }
       },
       include: ['Player1', 'Player2', 'Player3', 'Player4']

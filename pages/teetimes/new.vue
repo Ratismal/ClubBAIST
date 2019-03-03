@@ -80,7 +80,7 @@ export default {
       businessHours: {start: 60 * 6, end: 60 * 22},
       Hours: 12,
       Minutes: 0,
-      AM: true,
+      AM: false,
       validatedTeetime: null,
       error: '',
       displayMemberLookup: false
