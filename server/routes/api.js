@@ -28,6 +28,7 @@ module.exports = class ApiRoute {
     this.router.post('/standingteetimes/:id/approve', this.approveStandingTeeTimes.bind(this));
     this.router.put('/standingteetimes', this.putStandingTeeTimes.bind(this));
     this.router.get('/standingteetimes', this.getStandingTeeTimes.bind(this));
+    this.router.delete('/standingteetimes', this.clearStandingTeeTimes.bind(this));
 
     this.router.get('/members', this.getMembers.bind(this));
     this.router.get('/members/:id', this.getMember.bind(this));
@@ -150,6 +151,12 @@ module.exports = class ApiRoute {
 
   async approveStandingTeeTimes(ctx, next) {
     let teetimes = await this.client.manager.approveStandingTeeTimes(ctx.state.id, ctx.request.body);
+    ctx.status = 200;
+    ctx.body = {ok: true};
+  }
+
+  async clearStandingTeeTimes(ctx, next) {
+    await this.client.manager.clearStandingTeeTimes();
     ctx.status = 200;
     ctx.body = {ok: true};
   }

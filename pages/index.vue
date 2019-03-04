@@ -13,6 +13,8 @@
         <nuxt-link :to='"/members/" + $store.state.auth.user.MemberID' class='button'>About You</nuxt-link>
       </div>
       <div class='button-group'>
+        <button v-if='$store.state.auth.clerk' class='button danger' @click.prevent='clearStandingTeeTimes'>Clear Standing TeeTimes</button>
+
         <nuxt-link v-if='$store.state.auth.clerk' to='/teetimes/approve' class='button'>Approve Standing</nuxt-link>
         <nuxt-link to='/teesheet' class='button'>TeeSheet</nuxt-link>
       </div>
@@ -30,7 +32,12 @@
 
 <script>
 export default {
-  components: {}
+  components: {},
+  methods: {
+    async clearStandingTeeTimes() {
+      await this.$axios.$delete('/standingteetimes');
+    }
+  }
 };
 </script>
 

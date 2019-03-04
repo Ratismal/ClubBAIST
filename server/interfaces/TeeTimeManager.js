@@ -176,4 +176,10 @@ module.exports = class TeeTimes {
       };
     }
   }
+
+  async clearStandingTeeTimes() {
+    await this.db.StandingTeeTime.destroy({
+      where: {}
+    });
+  }
 };

@@ -40,4 +40,8 @@ module.exports = class CBManager {
   async approveStandingTeeTimes(id, body) {
     return await this.TeeTimes.approveStandingTeeTime(id, body);
   }
+
+  async clearStandingTeeTimes() {
+    return await this.TeeTimes.clearStandingTeeTimes();
+  }
 };
