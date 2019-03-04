@@ -19,12 +19,12 @@
       </div>
       <div class='button-group'>
         <a href='https://github.com/Ratismal/ClubBAIST' target='_blank' class='button'>Source Code</a>
-        <nuxt-link to='/login' class='button'>log in pls im very lonely</nuxt-link>
+        <nuxt-link to='/login' class='button'>Log In</nuxt-link>
       </div>
     </div>
     <div v-else class='center'>
       <br>
-      <nuxt-link to='/login' class='button'>log in pls im very lonely</nuxt-link>
+      <nuxt-link to='/login' class='button'>Log In</nuxt-link>
     </div>
   </section>
 </template>
