@@ -13,9 +13,8 @@
         <nuxt-link :to='"/members/" + $store.state.auth.user.MemberID' class='button'>About You</nuxt-link>
       </div>
       <div class='button-group'>
-        <button v-if='$store.state.auth.clerk' class='button danger' @click.prevent='clearStandingTeeTimes'>Clear Standing TeeTimes</button>
-
         <nuxt-link v-if='$store.state.auth.clerk' to='/teetimes/approve' class='button'>Approve Standing</nuxt-link>
+        <button v-if='$store.state.auth.clerk' class='button danger' @click.prevent='clearStandingTeeTimes'>Clear Standing TeeTimes</button>
         <nuxt-link to='/teesheet' class='button'>TeeSheet</nuxt-link>
       </div>
       <div class='button-group'>
