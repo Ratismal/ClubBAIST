@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, Sequelize) => {
-  const Score = sequelize.define('Member', {
+  const Score = sequelize.define('PlayerScore', {
     MemberID: {
       primaryKey: true,
       allowNull: false,
@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
     Date: {
       primaryKey: true,
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATEONLY
     },
     Handicap: {
       allowNull: false,

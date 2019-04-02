@@ -15,7 +15,7 @@ module.exports = {
       Date: {
         primaryKey: true,
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       Handicap: {
         allowNull: false,
@@ -37,6 +37,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Scores');
+    await queryInterface.dropTable('PlayerScores');
   }
 };

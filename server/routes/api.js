@@ -19,6 +19,7 @@ module.exports = class ApiRoute {
     });
 
     this.router.post('/login', this.login.bind(this));
+    this.router.post('/logout', this.logout.bind(this));
 
     this.router.get('/teetimes', this.getTeeTimes.bind(this));
     this.router.get('/teesheet', this.getTeeSheet.bind(this));
@@ -33,6 +34,9 @@ module.exports = class ApiRoute {
     this.router.get('/members', this.getMembers.bind(this));
     this.router.get('/members/:id', this.getMember.bind(this));
     this.router.get('/members/:id/teetimes', this.getMemberTeeTimes.bind(this));
+
+    this.router.put('/scores', this.putScores.bind(this));
+    this.router.get('/scores', this.getScores.bind(this));
 
     this.app.use(this.router.routes())
       .use(this.router.allowedMethods());
@@ -56,6 +60,12 @@ module.exports = class ApiRoute {
       message: 'ilu'
     };
     ctx.status = 200;
+  }
+
+  async logout(ctx, next) {
+    ctx.cookies.set('user-id', null);
+    ctx.status = 200;
+    ctx.body = { ok: true, bye: ':(' };
   }
 
   async getTeeTimes(ctx, next) {
@@ -126,7 +136,7 @@ module.exports = class ApiRoute {
         like: `%${q}%`
       })
     });
-    ctx.body = {message: 'ok', members: members.map(m=>m.dataValues)};
+    ctx.body = { message: 'ok', members: members.map(m => m.dataValues) };
     ctx.status = 200;
   }
 
@@ -152,12 +162,26 @@ module.exports = class ApiRoute {
   async approveStandingTeeTimes(ctx, next) {
     let teetimes = await this.client.manager.approveStandingTeeTimes(ctx.state.id, ctx.request.body);
     ctx.status = 200;
-    ctx.body = {ok: true};
+    ctx.body = { ok: true };
   }
 
   async clearStandingTeeTimes(ctx, next) {
     await this.client.manager.clearStandingTeeTimes();
     ctx.status = 200;
-    ctx.body = {ok: true};
+    ctx.body = { ok: true };
+  }
+
+  async getScores(ctx, next) {
+    const scores = await this.client.manager.getScores();
+    ctx.status = 200;
+    ctx.body = scores;
+  }
+
+  async putScores(ctx, next) {
+    let body = ctx.request.body;
+    console.log(body);
+    await this.client.manager.submitScore(body);
+    ctx.status = 200;
+    ctx.body = { ok: true };
   }
 };

@@ -18,8 +18,12 @@
         <nuxt-link to='/teesheet' class='button'>TeeSheet</nuxt-link>
       </div>
       <div class='button-group'>
+        <nuxt-link to='/scores/submit' class='button'>Submit Score</nuxt-link>
+        <nuxt-link to='/scores' class='button'>View Scores</nuxt-link>
+      </div>
+      <div class='button-group'>
         <a href='https://github.com/Ratismal/ClubBAIST' target='_blank' class='button'>Source Code</a>
-        <nuxt-link to='/login' class='button'>Log In</nuxt-link>
+        <nuxt-link to='/logout' class='button'>Log Out</nuxt-link>
       </div>
     </div>
     <div v-else class='center'>

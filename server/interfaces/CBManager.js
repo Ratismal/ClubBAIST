@@ -1,5 +1,6 @@
 const Members = require('./MemberManager');
 const TeeTimes = require('./TeeTimeManager');
+const Scores = require('./ScoreManager');
 
 module.exports = class CBManager {
   constructor(client) {
@@ -7,6 +8,7 @@ module.exports = class CBManager {
 
     this.Members = new Members(this);
     this.TeeTimes = new TeeTimes(this);
+    this.Scores = new Scores(this);
   }
 
   async reserveTeeTime(teetime) {
@@ -43,5 +45,13 @@ module.exports = class CBManager {
 
   async clearStandingTeeTimes() {
     return await this.TeeTimes.clearStandingTeeTimes();
+  }
+
+  async submitScore(score) {
+    return await this.Scores.submitScore(score);
+  }
+
+  async getScores() {
+    return await this.Scores.getScores();
   }
 };
