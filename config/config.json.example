@@ -4,6 +4,10 @@
     "password": "password",
     "database": "club_baist",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "dialectOptions": {
+        "useUTC": false
+      },
+    "timezone": "Canada/Mountain"
   }
 }
