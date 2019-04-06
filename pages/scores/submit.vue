@@ -20,7 +20,7 @@
       <div class='catgrid gap'>
         <div v-for='(hole, i) in holes' :key='i' class='col s12 m6 l4 catflex vertical'>
           <label>Hole {{ i+1 }}</label>
-          <input v-model='holes[i]' type='number'>
+          <input v-model='holes[i]' type='number' min='1'>
         </div>
       </div>
       <div class='catflex vertical center'>
@@ -41,7 +41,7 @@ export default {
   components: { MemberLookup },
   data() {
     return {
-      holes: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      holes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       courseRating: 70.6,
       slope: 128,
       member: null,
@@ -80,7 +80,11 @@ export default {
         !moment(payload.Date, 'YYYY-MM-DD').isValid()
       ) {
         this.error = 'Date must be valid.';
-      }
+      } else if (payload.TotalScore < 18)
+        this.error = 'The score for a hole may not be below 1';
+      else if (moment(payload.Date, 'YYYY-MM-DD') > moment())
+        this.error = 'The date cannot be in the future';
+      if (this.error) return;
 
       console.log(payload);
 
