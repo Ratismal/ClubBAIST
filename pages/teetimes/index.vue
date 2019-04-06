@@ -42,12 +42,13 @@
         </thead>
         <tbody>
           <tr v-for='(score, i) in reserv' :key='i'>
-            <td class='catflex vertical'>
-              <span>{{ score.Player1.FirstName }} {{ score.Player1.LastName }}</span>
-              <span>{{ score.Player2.FirstName }} {{ score.Player2.LastName }}</span>
-              <span>{{ score.Player3.FirstName }} {{ score.Player3.LastName }}</span>
-              <span>{{ score.Player4.FirstName }} {{ score.Player4.LastName }}</span>
-
+            <td>
+              <div class='catflex vertical'>
+                <span v-if='score.Player1'>{{ score.Player1.FirstName }} {{ score.Player1.LastName }}</span>
+                <span v-if='score.Player2'>{{ score.Player2.FirstName }} {{ score.Player2.LastName }}</span>
+                <span v-if='score.Player3'>{{ score.Player3.FirstName }} {{ score.Player3.LastName }}</span>
+                <span v-if='score.Player4'>{{ score.Player4.FirstName }} {{ score.Player4.LastName }}</span>
+              </div>
             </td>
             <td>{{ score.Timeslot }}</td>
             <td>{{ score.CartCount }}</td>
@@ -112,19 +113,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.teesheet {
-  font-size: 1.3em;
-  width: 100%;
-
-  border-collapse: separate;
-  border-spacing: 0 0;
-
-  tr {
-    margin-top: 1em;
-    // background: white;
-    height: 40px;
-  }
-}
-</style>

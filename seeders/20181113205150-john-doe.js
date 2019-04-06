@@ -1,5 +1,7 @@
 'use strict';
 
+const moment = require('moment');
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.sequelize.query('ALTER SEQUENCE "Members_MemberID_seq" RESTART WITH 1');
@@ -132,10 +134,66 @@ module.exports = {
         createdAt: new Date(2018, 1, 1, 1, 1, 1),
         updatedAt: new Date(2018, 1, 1, 1, 1, 1)
       }], {});
+
+    let today = moment('12:00 PM', 'hh:mm aa');
+
+    await queryInterface.bulkInsert('TeeTimes', [{
+      Player1ID: 1,
+      Player2ID: 2,
+      Player3ID: 3,
+      Player4ID: 4,
+      CartCount: 2,
+      Timeslot: today.add(1, 'day').toDate(),
+      createdAt: new Date(2018, 1, 1, 1, 1, 1),
+      updatedAt: new Date(2018, 1, 1, 1, 1, 1)
+    }, {
+      Player1ID: 4,
+      Player2ID: 5,
+      Player3ID: 1,
+      CartCount: 2,
+      Timeslot: today.add(1, 'day').toDate(),
+      createdAt: new Date(2018, 1, 1, 1, 1, 1),
+      updatedAt: new Date(2018, 1, 1, 1, 1, 1)
+    }, {
+      Player1ID: 2,
+      Player2ID: 3,
+      Player3ID: 1,
+      Player4ID: 6,
+      CartCount: 4,
+      Timeslot: today.add(1, 'day').toDate(),
+      createdAt: new Date(2018, 1, 1, 1, 1, 1),
+      updatedAt: new Date(2018, 1, 1, 1, 1, 1)
+    }, {
+      Player1ID: 1,
+      CartCount: 1,
+      Timeslot: today.add(1, 'day').toDate(),
+      createdAt: new Date(2018, 1, 1, 1, 1, 1),
+      updatedAt: new Date(2018, 1, 1, 1, 1, 1)
+    }], {});
+
+    today = moment('12:00 PM', 'hh:mm aa');
+
+    let scores = [];
+    for (let i = 0; i < 100; i++) {
+      let TotalScore = Math.floor(Math.random() * 144) + 1;
+      let Handicap = ((TotalScore - 70.6) / 128) * 113;
+
+      scores.push({
+        MemberID: Math.floor(Math.random() * 6) + 1,
+        Date: today.subtract(1, 'day').toDate(),
+        TotalScore,
+        Handicap,
+        createdAt: new Date(2018, 1, 1, 1, 1, 1),
+        updatedAt: new Date(2018, 1, 1, 1, 1, 1)
+      });
+    }
+
+    await queryInterface.bulkInsert('PlayerScores', scores, {});
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('TeeTimes', null, {});
+    await queryInterface.bulkDelete('PlayerScores', null, {});
     await queryInterface.bulkDelete('Members', null, {});
     await queryInterface.bulkDelete('MembershipTiers', null, {});
     await queryInterface.sequelize.query('ALTER SEQUENCE "Members_MemberID_seq" RESTART WITH 1');

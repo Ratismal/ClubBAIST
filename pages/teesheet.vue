@@ -51,8 +51,15 @@ export default {
     let timeslots = [];
     for (let h = this.hours[0]; h <= this.hours[1]; h++) {
       for (const m of this.minutes) {
-        let d = base.clone().add(h, 'hours').add(m, 'minutes');
-        timeslots.push({key: d.format('HH:mm'), date: d, formatted: d.format('hh:mm A')});
+        let d = base
+          .clone()
+          .add(h, 'hours')
+          .add(m, 'minutes');
+        timeslots.push({
+          key: d.format('HH:mm'),
+          date: d,
+          formatted: d.format('hh:mm A')
+        });
       }
     }
     this.timeslots = timeslots;
@@ -64,16 +71,21 @@ export default {
       let date = moment(this.date);
       if (!date.isValid()) date = moment();
       try {
-        let teetimes = await this.$axios.$get(
-            `/teesheet?q=${date.format()}`
-        );
+        let teetimes = await this.$axios.$get(`/teesheet?q=${date.format()}`);
         console.log(teetimes);
         for (const teetime of teetimes) {
           teetime.Timeslot = moment(teetime.Timeslot);
           teetime.formatted = teetime.Timeslot.format('hh:mm A');
           teetime.key = teetime.Timeslot.format('HH:mm');
-          teetime.Members = [teetime.Player1, teetime.Player2, teetime.Player3, teetime.Player4]
-            .filter(p => !!p).map(p => p.FirstName + ' ' + p.LastName).join(', ');
+          teetime.Members = [
+            teetime.Player1,
+            teetime.Player2,
+            teetime.Player3,
+            teetime.Player4
+          ]
+            .filter(p => !!p)
+            .map(p => p.FirstName + ' ' + p.LastName)
+            .join(', ');
           this.teetimes[teetime.key] = teetime;
         }
 
@@ -82,7 +94,11 @@ export default {
           let teetime = this.teetimes[timeslot.key];
           if (teetime) {
             this.teesheet.push(teetime);
-          } else this.teesheet.push({key: timeslot.key, formatted: timeslot.formatted});
+          } else
+            this.teesheet.push({
+              key: timeslot.key,
+              formatted: timeslot.formatted
+            });
         }
 
         console.log(this.teetimes);
@@ -100,20 +116,6 @@ export default {
 
 
 <style lang="scss" scoped>
-.teesheet {
-  font-size: 1.3em;
-  width: 100%;
-
-  border-collapse: separate;
-  border-spacing: 0 0;
-
-  tr {
-    margin-top: 1em;
-    // background: white;
-    height: 40px;
-  }
-}
-
 .time {
   font-family: monospace;
   text-align: center;

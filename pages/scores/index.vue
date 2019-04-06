@@ -109,18 +109,3 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.teesheet {
-  font-size: 1.3em;
-  width: 100%;
-
-  border-collapse: separate;
-  border-spacing: 0 0;
-
-  tr {
-    margin-top: 1em;
-    // background: white;
-    height: 40px;
-  }
-}
-</style>
