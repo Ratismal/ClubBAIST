@@ -51,7 +51,11 @@ module.exports = class CBManager {
     return await this.Scores.submitScore(score);
   }
 
-  async getScores() {
-    return await this.Scores.getScores();
+  async getScores(startDate, endDate, memberID) {
+    return await this.Scores.getScores(startDate, endDate, memberID);
+  }
+
+  async getReserv(startDate, endDate, memberID) {
+    return await this.TeeTimes.getReserv(startDate, endDate, memberID);
   }
 };

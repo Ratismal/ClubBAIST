@@ -101,7 +101,7 @@ module.exports = class TeeTimes {
       let time = start.clone().add(comps[0], 'hours').add(comps[1], 'minutes');
       values.Timeslot = time.toDate();
       if (!teetimes.find(tt => tt.dataValues.Timeslot.valueOf() === values.Timeslot.valueOf()))
-        teetimes.push({dataValues: values});
+        teetimes.push({ dataValues: values });
     }
     return teetimes;
   }
@@ -181,5 +181,32 @@ module.exports = class TeeTimes {
     await this.db.StandingTeeTime.destroy({
       where: {}
     });
+  }
+
+  async getReserv(startDate, endDate, memberID) {
+    let where = {};
+    if (startDate || endDate) where.Timeslot = {};
+
+    if (startDate) {
+      where.Timeslot[this.db.Sequelize.Op.gte] = startDate;
+    }
+    if (endDate) {
+      where.Timeslot[this.db.Sequelize.Op.lte] = endDate;
+    }
+    if (memberID) {
+      where[this.db.Sequelize.Op.or] = {
+        Player1ID: memberID,
+        Player2ID: memberID,
+        Player3ID: memberID,
+        Player4ID: memberID
+      };
+    }
+    let teetimes = await this.db.TeeTime.findAll({
+      where,
+      include: ['Player1', 'Player2', 'Player3', 'Player4'],
+      order: [['Timeslot', 'DESC']]
+    });
+
+    return teetimes.map(s => s.dataValues);
   }
 };

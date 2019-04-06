@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class='container'>
-      <h2>Scores</h2>
+      <h2>TeeTime Reservations</h2>
 
       <div class='catgrid gap'>
         <div class='col s6'>
@@ -29,24 +29,28 @@
             </div>
           </div>
         </div>
-        <button class='col s12 button' @click.prevent='getScores'>Search</button>
+        <button class='col s12 button' @click.prevent='getReserv'>Search</button>
       </div>
 
-      <table v-if='scores.length > 0' class='teesheet'>
+      <table v-if='reserv.length > 0' class='teesheet'>
         <thead>
           <tr>
-            <th>Player Name</th>
-            <th>Handicap</th>
-            <th>Date</th>
-            <th>Score</th>
+            <th>Players</th>
+            <th>Timeslot</th>
+            <th>Carts</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for='(score, i) in scores' :key='i'>
-            <td>{{ score.Member.FirstName }} {{ score.Member.LastName }}</td>
-            <td>{{ score.Handicap }}</td>
-            <td>{{ score.Date }}</td>
-            <td>{{ score.TotalScore }}</td>
+          <tr v-for='(score, i) in reserv' :key='i'>
+            <td class='catflex vertical'>
+              <span>{{ score.Player1.FirstName }} {{ score.Player1.LastName }}</span>
+              <span>{{ score.Player2.FirstName }} {{ score.Player2.LastName }}</span>
+              <span>{{ score.Player3.FirstName }} {{ score.Player3.LastName }}</span>
+              <span>{{ score.Player4.FirstName }} {{ score.Player4.LastName }}</span>
+
+            </td>
+            <td>{{ score.Timeslot }}</td>
+            <td>{{ score.CartCount }}</td>
           </tr>
         </tbody>
       </table>
@@ -65,7 +69,7 @@ export default {
   components: { MemberLookup },
   data() {
     return {
-      scores: [],
+      reserv: [],
       startDate: null,
       endDate: null,
       member: null,
@@ -74,7 +78,7 @@ export default {
     };
   },
   methods: {
-    async getScores() {
+    async getReserv() {
       let payload = {};
       if (this.startDate) payload.start = this.startDate;
       if (this.endDate) payload.end = this.endDate;
@@ -85,14 +89,14 @@ export default {
         }
       } else payload.member = this.$store.state.auth.user.MemberID;
 
-      let scores = await this.$axios.$get(`/scores`, {
+      let reserv = await this.$axios.$get(`/reserv`, {
         params: payload
       });
 
-      console.log(scores);
+      console.log(reserv);
 
-      this.scores = scores.map(s => {
-        s.Date = moment(s.Date).format('LL');
+      this.reserv = reserv.map(s => {
+        s.Timeslot = moment(s.Timeslot).format('LLLL');
         return s;
       });
 

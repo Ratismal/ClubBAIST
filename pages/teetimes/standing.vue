@@ -75,7 +75,7 @@ import moment from 'moment';
 import MemberLookup from '@/components/MemberLookup.vue';
 
 export default {
-  components: {MemberLookup},
+  components: { MemberLookup },
   data() {
     return {
       teetime: {
@@ -84,12 +84,14 @@ export default {
       },
       RequestedDay: 1,
       RequestedStartDate: moment().format('YYYY-MM-DD'),
-      RequestedEndDate: moment().add(1, 'year').format('YYYY-MM-DD'),
+      RequestedEndDate: moment()
+        .add(1, 'year')
+        .format('YYYY-MM-DD'),
       playerLimit: this.$store.state.auth.clerk ? 4 : 3,
       player2: null,
       player3: null,
       player4: null,
-      businessHours: {start: 60 * 6, end: 60 * 22},
+      businessHours: { start: 60 * 6, end: 60 * 22 },
       Hours: 12,
       Minutes: 0,
       AM: false,
@@ -103,7 +105,9 @@ export default {
       return this.$store.state.auth.user.MemberID;
     },
     RequestedTime() {
-      return `${this.Hours == 0 ? 12 : this.Hours}:${this.Minutes} ${this.AM ? 'AM' : 'PM'}`;
+      return `${this.Hours == 0 ? 12 : this.Hours}:${this.Minutes} ${
+        this.AM ? 'AM' : 'PM'
+      }`;
     }
     // date() {
     //   console.log(this.teetime.Date);
@@ -126,17 +130,22 @@ export default {
   async asyncData({ params, $axios }) {},
   methods: {
     addMember(member) {
-      if (!this.teetime.players.find(p => p.MemberID === member.MemberID) && member.MemberID !== this.$store.state.auth.id) {
+      if (
+        !this.teetime.players.find(p => p.MemberID === member.MemberID) &&
+        member.MemberID !== this.$store.state.auth.id
+      ) {
         this.teetime.players.push(member);
       }
-      if (this.teetime.players.length >= this.playerLimit) this.displayMemberLookup = false;
+      if (this.teetime.players.length >= this.playerLimit)
+        this.displayMemberLookup = false;
     },
     removeMember(memberID) {
       let player = this.teetime.players.find(p => p.MemberID !== memberID);
       this.teetime.players.splice(this.teetime.players.indexOf(player), 1);
     },
     toggleMemberLookup() {
-      if (this.teetime.players.length >= this.playerLimit) this.displayMemberLookup = false;
+      if (this.teetime.players.length >= this.playerLimit)
+        this.displayMemberLookup = false;
       else this.displayMemberLookup = !this.displayMemberLookup;
     },
     validate(teetime) {
@@ -147,7 +156,6 @@ export default {
       // if (teetime.PlayerCount > 4)
       //   return (this.error = 'PlayerCount is greater than 4.');
       console.log(teetime);
-
 
       if (!teetime.RequestedStartDate.isValid())
         return (this.error = 'A valid start date must be provided.');
@@ -162,7 +170,6 @@ export default {
       if (teetime.RequestedStartDate >= teetime.RequestedEndDate)
         return (this.error = 'The end date must be later than the start date');
 
-
       this.error = '';
 
       return true;
@@ -172,8 +179,10 @@ export default {
       if (!this.$store.state.auth.clerk) {
         p.unshift(this.$store.state.auth.user);
       }
-      if (p.length !== 4) return (this.error = 'There must be four registered players.');
-      if (p[0].MembershipTierType !== 1) return (this.error = 'The first member must be Gold Tier.');
+      if (p.length !== 4)
+        return (this.error = 'There must be four registered players.');
+      if (p[0].MembershipTierType !== 1)
+        return (this.error = 'The first member must be Gold Tier.');
       p = p.map(m => m.MemberID);
       let teetime = {
         PlayerCount: Number(this.teetime.PlayerCount),
@@ -199,25 +208,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.time-separator {
-  margin-right: 10px;
-  font-size: 1.3em;
-}
-.button-group {
-  align-items: center;
-}
-
-.behind-lookup {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 8px;
-}
-
-label {
-    margin-top: 1rem;
-    display: block;
-}
-</style>

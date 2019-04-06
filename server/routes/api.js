@@ -37,6 +37,7 @@ module.exports = class ApiRoute {
 
     this.router.put('/scores', this.putScores.bind(this));
     this.router.get('/scores', this.getScores.bind(this));
+    this.router.get('/reserv', this.getReserv.bind(this));
 
     this.app.use(this.router.routes())
       .use(this.router.allowedMethods());
@@ -172,7 +173,9 @@ module.exports = class ApiRoute {
   }
 
   async getScores(ctx, next) {
-    const scores = await this.client.manager.getScores();
+    let query = ctx.request.query;
+
+    const scores = await this.client.manager.getScores(query.start, query.end, query.member);
     ctx.status = 200;
     ctx.body = scores;
   }
@@ -183,5 +186,13 @@ module.exports = class ApiRoute {
     await this.client.manager.submitScore(body);
     ctx.status = 200;
     ctx.body = { ok: true };
+  }
+
+  async getReserv(ctx, next) {
+    let query = ctx.request.query;
+
+    const scores = await this.client.manager.getReserv(query.start, query.end, query.member);
+    ctx.status = 200;
+    ctx.body = scores;
   }
 };

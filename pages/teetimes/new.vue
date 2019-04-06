@@ -59,7 +59,7 @@ import moment from 'moment';
 import MemberLookup from '@/components/MemberLookup.vue';
 
 export default {
-  components: {MemberLookup},
+  components: { MemberLookup },
   data() {
     return {
       teetime: {
@@ -73,11 +73,11 @@ export default {
       player3: null,
       player4: null,
       availableHours: {
-        1: [{start: 0, end: 60 * 24}],
-        2: [{start: 0, end: 60 * 15}, {start: 60 * 17.5, end: 60 * 24}],
-        3: [{start: 0, end: 60 * 15}, {start: 60 * 18, end: 60 * 24}]
+        1: [{ start: 0, end: 60 * 24 }],
+        2: [{ start: 0, end: 60 * 15 }, { start: 60 * 17.5, end: 60 * 24 }],
+        3: [{ start: 0, end: 60 * 15 }, { start: 60 * 18, end: 60 * 24 }]
       },
-      businessHours: {start: 60 * 6, end: 60 * 22},
+      businessHours: { start: 60 * 6, end: 60 * 22 },
       Hours: 12,
       Minutes: 0,
       AM: false,
@@ -111,17 +111,22 @@ export default {
   async asyncData({ params, $axios }) {},
   methods: {
     addMember(member) {
-      if (!this.teetime.players.find(p => p.MemberID === member.MemberID) && member.MemberID !== this.$store.state.auth.id) {
+      if (
+        !this.teetime.players.find(p => p.MemberID === member.MemberID) &&
+        member.MemberID !== this.$store.state.auth.id
+      ) {
         this.teetime.players.push(member);
       }
-      if (this.teetime.players.length >= this.playerLimit) this.displayMemberLookup = false;
+      if (this.teetime.players.length >= this.playerLimit)
+        this.displayMemberLookup = false;
     },
     removeMember(memberID) {
       let player = this.teetime.players.find(p => p.MemberID !== memberID);
       this.teetime.players.splice(this.teetime.players.indexOf(player), 1);
     },
     toggleMemberLookup() {
-      if (this.teetime.players.length >= this.playerLimit) this.displayMemberLookup = false;
+      if (this.teetime.players.length >= this.playerLimit)
+        this.displayMemberLookup = false;
       else this.displayMemberLookup = !this.displayMemberLookup;
     },
     validate(teetime) {
@@ -152,7 +157,7 @@ export default {
       } else tier = this.teetime.players[0].MembershipTierType;
       const hours = this.availableHours[tier];
       let hoursFine = false;
-      let compare = (teetime.Timeslot.hours() * 60) + teetime.Timeslot.minutes();
+      let compare = teetime.Timeslot.hours() * 60 + teetime.Timeslot.minutes();
 
       console.log(compare, hours, this.businessHours);
 
@@ -160,13 +165,18 @@ export default {
         if (compare >= hour.start && compare <= hour.end) hoursFine = true;
       }
       if (!hoursFine)
-        return (this.error = 'You cannot book a TeeTime in this timeslot with your current membership tier.');
-      if (compare < this.businessHours.start || compare > this.businessHours.end)
+        return (this.error =
+          'You cannot book a TeeTime in this timeslot with your current membership tier.');
+      if (
+        compare < this.businessHours.start ||
+        compare > this.businessHours.end
+      )
         return (this.error = 'Club BAIST is not open at this timeslot.');
 
       console.log(teetime.Timeslot - Date.now());
-      if (teetime.Timeslot - Date.now()  > (1000 * 60 * 60 * 24 * 7))
-        return (this.error = 'You cannot book a TeeTime greater than a week in advance.');
+      if (teetime.Timeslot - Date.now() > 1000 * 60 * 60 * 24 * 7)
+        return (this.error =
+          'You cannot book a TeeTime greater than a week in advance.');
 
       this.error = '';
 
@@ -201,24 +211,3 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.time-separator {
-  margin-right: 10px;
-  font-size: 1.3em;
-}
-.button-group {
-  align-items: center;
-}
-
-.behind-lookup {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 8px;
-}
-
-label {
-    margin-top: 1rem;
-    display: block;
-}
-</style>

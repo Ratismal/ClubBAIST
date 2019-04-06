@@ -97,12 +97,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.behind-lookup {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 8px;
-}
-</style>
